@@ -18,10 +18,11 @@ import FacturationLayout from "./layouts/FacturationLayout";
 import PurchasesLayout from "./layouts/PurchasesLayout";
 import InventoryLayout from "./layouts/InventoryLayout";
 import FabricationLayout from "./layouts/FabricationLayout";
+import EmployeesLayout from "./layouts/EmployeesLayout";
 import Costs from "./components/Costs/Costs";
 import ERP2 from "./components/Costs/CostsNew";
 import Discussion from "./components/Discussion";
-import Library from "./components/Library";
+
 import StockAnalysisList from "./components/StockAnalysis/StockAnalysisList";
 import ContactsList from "./components/Contacts/ContactsList";
 import ContactDetails from "./components/Contacts/ContactDetails";
@@ -43,9 +44,10 @@ import InventoryReceptions from "./components/Inventory/InventoryReceptions";
 import NewInventoryOperation from "./components/Inventory/NewInventoryOperation";
 import FabricationOverview from "./components/Fabrication/FabricationOverview";
 import NewFabricationOrder from "./components/Fabrication/NewFabricationOrder";
-import SmartSale from "./components/SmartSale";
-import Employees from "./components/Employees";
-import CarPark from "./components/CarPark";
+
+import EmployeesList from "./components/Employees/EmployeesList.tsx";
+import NewEmployee from "./components/Employees/NewEmployee";
+
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import CalendarView from "./components/Calendar/CalendarView";
@@ -54,7 +56,7 @@ import PlanningList from "./components/Planning/PlanningLists";
 import NewPlanning from "./components/Planning/NewPlanning";
 
 const Placeholder: React.FC<{ title: string }> = ({ title }) => (
-    <div className="flex-1 flex flex-col p-4 bg-white min-h-screen overflow-y-auto ">
+    <div className="flex-1 flex flex-col p-4 bg-white min-h-screen overflow-y-auto">
         <h2 className="text-lg font-semibold text-gray-800">{title}</h2>
         <p className="text-sm text-gray-600 mt-2">
             This section is under development.
@@ -206,6 +208,12 @@ const App: React.FC = () => {
                     />
                 </Route>
 
+                {/* Employees Layout */}
+                <Route element={<EmployeesLayout />}>
+                    <Route path="/employees" element={<EmployeesList />} />
+                    <Route path="/employees/new" element={<NewEmployee />} />
+                </Route>
+
                 {/* Other routes with their own layout */}
                 <Route
                     element={
@@ -219,10 +227,6 @@ const App: React.FC = () => {
                     }
                 >
                     <Route path="/discussion" element={<Discussion />} />
-                    <Route path="/library" element={<Library />} />
-                    <Route path="/smart-sale" element={<SmartSale />} />
-                    <Route path="/employees" element={<Employees />} />
-                    <Route path="/car-park" element={<CarPark />} />
                     <Route path="*" element={<Navigate to="/discussion" />} />
                 </Route>
             </Routes>
