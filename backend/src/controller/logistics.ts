@@ -11,7 +11,7 @@ import { RawMaterial } from '../models/RawMaterials';
 import { Logistics } from '../models/Logistics';
 import { Employee } from '../models/Employee';
 import { Billing, BillingType, BillingStatus } from '../models/Billing';
-import { Client } from '../../models/Client';
+import { Client } from '../models/Client';
 import { Commercial } from '../models/Commercial';
 import { z } from 'zod';
 
