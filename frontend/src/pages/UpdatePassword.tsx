@@ -69,39 +69,7 @@ const SetPassword: React.FC = () => {
                     >
                         {({ isSubmitting, values, setFieldValue }) => (
                             <Form>
-                                <div className="mb-4 relative">
-                                    <Field
-                                        type={
-                                            values.showOldPassword
-                                                ? "text"
-                                                : "password"
-                                        }
-                                        name="oldPassword"
-                                        placeholder="Old Password"
-                                        className="w-full px-3 py-2 bg-white/20 border border-gray-300/30 rounded-md shadow-sm placeholder-gray-300 text-white focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm pr-10"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            setFieldValue(
-                                                "showOldPassword",
-                                                !values.showOldPassword
-                                            )
-                                        }
-                                        className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-300 hover:text-white focus:outline-none"
-                                    >
-                                        {values.showOldPassword ? (
-                                            <FaEyeSlash size={20} />
-                                        ) : (
-                                            <FaEye size={20} />
-                                        )}
-                                    </button>
-                                    <ErrorMessage
-                                        name="oldPassword"
-                                        component="div"
-                                        className="text-red-500 text-sm mt-1"
-                                    />
-                                </div>
+                                
                                 <div className="mb-4 relative">
                                     <Field
                                         type={

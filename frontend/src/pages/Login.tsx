@@ -12,7 +12,7 @@ const LoginSchema = Yup.object().shape({
 });
 
 const LoginPage: React.FC = () => {
-    const handleSubmit = async (values: any, { setSubmitting }: any) => {
+    const handleSubmit = async (values: any, { setSubmitting }:any) => {
         try {
             const response = await axios.post("/api/auth/login", values);
             console.log("Login successful:", response.data);
@@ -47,12 +47,8 @@ const LoginPage: React.FC = () => {
 
             <div className="w-2/3 flex flex-col items-center justify-center p-12">
                 <div className="mb-8 text-center">
-                    <img
-                        src="jhkjhkjnnj"
-                        alt="Dashboard img"
-                        className="inline-block mb-4 shadow-lg rounded"
-                    />
-                    <p className="text-white text-lg">
+                    
+                    <p className="text-white text-3xl">
                         dok nchofo wesh ndiro hna lhdlidol!
                     </p>
                 </div>
