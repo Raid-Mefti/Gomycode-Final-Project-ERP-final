@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { User } from '../models/User';
 import { z } from 'zod';
-import { Employee } from '../models/Employee';
+import Employee  from '../models/Employee';
 
 const loginSchema = z.object({
   username: z.string().min(3),
