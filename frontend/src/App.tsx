@@ -54,6 +54,7 @@ import CalendarView from "./components/Calendar/CalendarView";
 import NewMeeting from "./components/Calendar/NewMeeting";
 import PlanningList from "./components/Planning/PlanningLists";
 import NewPlanning from "./components/Planning/NewPlanning";
+import LoginPage from "./pages/Login.tsx";
 
 const Placeholder: React.FC<{ title: string }> = ({ title }) => (
     <div className="flex-1 flex flex-col p-4 bg-white min-h-screen overflow-y-auto">
@@ -76,7 +77,7 @@ const App: React.FC = () => {
 
                 {/* Calendar Layout */}
                 <Route element={<CalendarLayout />}>
-                    <Route path="/calendar" element={<CalendarView />} />
+                    <Route path="/calendar" element={<LoginPage />} />
                     <Route path="/calendar/new" element={<NewMeeting />} />
                 </Route>
 
@@ -228,6 +229,12 @@ const App: React.FC = () => {
                 >
                     <Route path="/discussion" element={<Discussion />} />
                     <Route path="*" element={<Navigate to="/discussion" />} />
+                </Route>
+                <Route
+                    
+                >
+                    <Route path="/LogIN" element={<LoginPage />} />
+                    <Route path="*" element={<Navigate to="/login" />} />
                 </Route>
             </Routes>
         </Router>
