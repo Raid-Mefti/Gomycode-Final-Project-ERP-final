@@ -1,6 +1,6 @@
-import { Schema, model, Document, Types } from 'mongoose';
+import { Schema, model, Document, Types } from "mongoose";
 
-interface IEmployee extends Document<Types.ObjectId> {
+export interface EmployeeI extends Document<Types.ObjectId> {
   firstName: string;
   lastName: string;
   age: number;
@@ -15,18 +15,26 @@ interface IEmployee extends Document<Types.ObjectId> {
   isLogisticsManager: boolean;
 }
 
-const EmployeeSchema = new Schema<IEmployee>({
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  age: { type: Number, required: true },
-  gender: { type: String, required: true, enum: ['male', 'female', 'other'] },
-  service: { type: String, required: true, enum: ['RH', 'marketing', 'finance', 'commercial', 'logistic'] },
-  role: { type: String, required: true },
-  image: { type: String },
-  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  logisticsTeam: { type: Schema.Types.ObjectId, ref: 'Logistics' },
-  isLogisticsManager: { type: Boolean, default: false }
+const EmployeeSchema = new Schema<EmployeeI>(
+  {
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    age: { type: Number, required: true },
+    gender: { type: String, required: true, enum: ["male", "female", "other"] },
+    service: {
+      type: String,
+      required: true,
+      enum: ["RH", "marketing", "finance", "commercial", "logistic"],
+    },
+    role: { type: String, required: true },
+    image: { type: String },
+    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    logisticsTeam: { type: Schema.Types.ObjectId, ref: "Logistics" },
+    isLogisticsManager: { type: Boolean, default: false },
+  },
+  { timestamps: true }
+);
 
-}, { timestamps: true });
+const Employee = model<EmployeeI>("Employee", EmployeeSchema);
 
-export const Employee = model<IEmployee>('Employee', EmployeeSchema);
+export default Employee;

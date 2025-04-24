@@ -1,10 +1,10 @@
 import jwt from "jsonwebtoken";
-import userModel from "../models/user.js";
+import { User } from "../models/User.js";
 import { NextFunction, Request, Response } from "express";
-import { EmployeeI, EmployeeModel } from "models/employee.js";
+import EmployeeModel, { EmployeeI } from "../models/Employee.js";
 
 export async function verifyCredentials(
-  req: Request & { employee?: EmployeeI },
+  req: Request & { user?: EmployeeI },
   res: Response,
   next: NextFunction
 ) {
@@ -12,11 +12,11 @@ export async function verifyCredentials(
     const bearerToken = req.headers["authorization"];
     if (!bearerToken) throw new Error("Bearer token not provided");
     const token = bearerToken.split(" ")[1];
-    const data = jwt.verify(token, process.env.AUTH_SECRET) as { _id: string };
+    const data = jwt.verify(token, process.env.AUTH_SECRET!) as { _id: string };
     const user = await EmployeeModel.findById(data._id);
-    if (!EmployeeModel)
-      throw new Error("employee not found or you are not logged in");
-    req.employee = EmployeeModel;
+    if (user) {
+      req.user = user;
+    }
   } catch (e) {
     console.log((e as Error).message);
   }
