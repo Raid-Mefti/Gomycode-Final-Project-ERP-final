@@ -9,7 +9,7 @@ export enum PurchaseOrderStatus {
   SHIPPED = 'shipped'
 }
 
-interface IPurchaseOrder extends Document<Types.ObjectId> {
+export interface IPurchaseOrder extends Document<Types.ObjectId> {
   orderNumber: string;
   client: Schema.Types.ObjectId;
   commercial: Schema.Types.ObjectId;
@@ -47,3 +47,4 @@ const PurchaseOrderSchema = new Schema<IPurchaseOrder>({
 }, { timestamps: true });
 
 export const PurchaseOrder = model<IPurchaseOrder>('PurchaseOrder', PurchaseOrderSchema);
+

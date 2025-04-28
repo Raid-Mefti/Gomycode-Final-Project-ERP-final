@@ -1,7 +1,8 @@
 // controllers/logistic/logistics.controller.ts
 import { Request, Response } from 'express';
-import { 
-  PurchaseOrder,
+import {
+  PurchaseOrder , 
+  IPurchaseOrder,
   PurchaseOrderStatus 
 } from '../models/PurchaseOrder';
 import { ProductionOrder, ProductionStatus } from '../models/ProductionOrder';
