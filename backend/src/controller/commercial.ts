@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { PurchaseOrder } from '../models/PurchaseOrder';
-import { Product } from '../models/Product';
+import  Product  from '../models/Product';
 import { Client } from '../models/Client';
 import { Commercial } from '../models/Commercial';
 import { z } from 'zod';

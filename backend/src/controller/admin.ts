@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { User } from '../models/User';
-import { Employee } from '../models/Employee';
+import  Employee  from '../models/Employee';
 import bcrypt from 'bcrypt';
 import { z } from 'zod';
 import nodemailer from 'nodemailer';

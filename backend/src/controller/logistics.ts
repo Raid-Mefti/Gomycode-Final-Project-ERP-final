@@ -5,11 +5,11 @@ import {
   PurchaseOrderStatus 
 } from '../models/PurchaseOrder';
 import { ProductionOrder, ProductionStatus } from '../models/ProductionOrder';
-import { Product } from '../models/Product';
+import  Product  from '../models/Product';
 import { ProductionStep } from '../models/ProductionSteps';
 import { RawMaterial } from '../models/RawMaterials';
 import { Logistics } from '../models/Logistics';
-import { Employee } from '../models/Employee';
+import  Employee  from '../models/Employee';
 import { Billing, BillingType, BillingStatus } from '../models/Billing';
 import { Client } from '../models/Client';
 import { Commercial } from '../models/Commercial';
@@ -74,7 +74,7 @@ export const processPurchaseOrder = async (req: Request, res: Response) => {
       
       if (!steps || steps.length === 0) {
         return res.status(400).json({
-          message: `No production steps defined for product ${product.name}`
+          message: `No production steps defined for product ${Product.name}`
         });
       }
       

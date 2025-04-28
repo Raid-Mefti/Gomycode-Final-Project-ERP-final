@@ -20,34 +20,64 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
 }; */
 import "dotenv/config";
 import express from "express";
-import logger from "./config/logger.js";
-import dbConnection from "./config/db.js";
-import v1Router from "./routes/v1.js";
+import logger from "../config/logger.js";
+import dbConnection from "../config/db.js";
+import v1Router from "./v1";
 import morgan from "morgan";
 import cors from "cors";
+
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Validate environment variables
+if (!process.env.PORT) {
+  logger.warn("PORT not defined in environment variables, defaulting to 3000");
+}
+
 // Set the application to trust the reverse proxy
 app.set("trust proxy", true);
+
+// Configure CORS
 app.use(
   cors({
     origin: (origin, callback) => {
-      return callback(null, origin);
-      if (origin === "http://localhost:5173") callback(null, origin);
-      else callback(new Error("Invalid origin"));
+      const allowedOrigins = ["http://localhost:5173", undefined]; // undefined for non-browser requests (e.g., Postman)
+      if (allowedOrigins.includes(origin)) {
+        callback(null, origin);
+      } else {
+        callback(new Error("Invalid origin"));
+      }
     },
     credentials: true,
   })
 );
-//app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(morgan("dev"));
-// adding routes to the application
+
+// Middleware for parsing form data and JSON
+app.use(express.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
+app.use(express.json()); // For parsing application/json
+app.use(morgan("dev")); // HTTP request logging
+
+// Routes
 app.use("/api/v1", v1Router);
-dbConnection.then(() => {
-  app.listen(PORT, () => {
-    console.log(`server listening on ${PORT}`);
-    console.log(`http://localhost:${PORT}`);
-    logger.warn(`server listening on ${PORT}`);
+
+// Start server after successful database connection
+dbConnection
+  .then(() => {
+    const server = app.listen(PORT, () => {
+      logger.info(`Server listening on port ${PORT}`);
+      logger.info(`http://localhost:${PORT}`);
+    });
+
+    // Graceful shutdown
+    process.on("SIGTERM", () => {
+      logger.info("SIGTERM received. Closing server...");
+      server.close(() => {
+        logger.info("Server closed.");
+        process.exit(0);
+      });
+    });
+  })
+  .catch((error) => {
+    logger.error(`Database connection failed: ${error.message}`);
+    process.exit(1);
   });
-});
