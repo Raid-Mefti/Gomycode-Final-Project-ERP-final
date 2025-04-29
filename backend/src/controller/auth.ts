@@ -54,6 +54,12 @@ export const login = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Server error', error });
   }
 };
+export const logout = async (req: Request, res: Response) => {
+  try {} catch (error) {
+    res.status(500).json({ message: 'Server error', error })}};
+  export const checkUser = async (req: Request, res: Response) => {
+    try {} catch (error) {
+    res.status(500).json({ message: 'Server error', error })}};
 
 
 
