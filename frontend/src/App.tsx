@@ -77,8 +77,10 @@ const App: React.FC = () => {
 
                 {/* Calendar Layout */}
                 <Route element={<CalendarLayout />}>
+                {/* <Route path ="/calendar/CalendarView" element={<CalendarView/>} /> */}
                     <Route path="/calendar" element={<LoginPage />} />
                     <Route path="/calendar/new" element={<NewMeeting />} />
+                    {/* <Route path = "/calendar/previous" element={<previous/>}/> */}
                 </Route>
 
                 {/* Planning Layout */}
