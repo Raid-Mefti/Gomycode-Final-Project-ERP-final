@@ -1,4 +1,4 @@
-const Joi = require("joi");
+/* const Joi = require("joi");
 
 const registerValidation = (data) => {
   const schema = Joi.object({
@@ -51,3 +51,4 @@ module.exports = {
   productValidation,
   orderValidation,
 };
+ */

@@ -79,6 +79,7 @@ const App: React.FC = () => {
                 <Route element={<CalendarLayout />}>
                     <Route path="/calendar" element={<CalendarView />} />
                     <Route path="/calendar/new" element={<NewMeeting />} />
+                    {/* <Route path = "/calendar/previous" element={<previous/>}/> */}
                 </Route>
 
                 {/* Planning Layout */}
