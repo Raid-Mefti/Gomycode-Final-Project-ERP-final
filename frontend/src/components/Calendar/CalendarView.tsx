@@ -1,40 +1,77 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Search, Filter, Star } from "lucide-react";
+import FullCalendar from "@fullcalendar/react";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import interactionPlugin from "@fullcalendar/interaction";
 
 const CalendarView: React.FC = () => {
     const navigate = useNavigate();
-    const [currentWeek, setCurrentWeek] = useState("2025-04-07"); // Starting week
-
-    const daysOfWeek = [
-        { day: "lun. 7", date: "7" },
-        { day: "mar. 8", date: "8" },
-        { day: "mer. 9", date: "9" },
-        { day: "jeu. 10", date: "10" },
-        { day: "ven. 11", date: "11" },
-        { day: "sam. 12", date: "12" },
-        { day: "dim. 13", date: "13" },
-    ];
-
-    const timeSlots = Array.from({ length: 24 }, (_, i) => `${i}:00`);
+    const [currentWeek, setCurrentWeek] = useState("2025-04-07");
+    const [events, setEvents] = useState([
+        {
+            id: "1",
+            title: "Meeting with Team",
+            start: "2025-04-07T10:00:00",
+            end: "2025-04-07T11:00:00",
+        },
+        {
+            id: "2",
+            title: "Lunch Break",
+            start: "2025-04-08T12:00:00",
+            end: "2025-04-08T13:00:00",
+        },
+    ]);
 
     const handlePreviousWeek = () => {
-        // Logic to go to previous week (simplified for now)
-        alert("Previous week clicked!");
+        setCurrentWeek((prev) => {
+            const date = new Date(prev);
+            date.setDate(date.getDate() - 7);
+            return date.toISOString().split("T")[0];
+        });
     };
 
     const handleNextWeek = () => {
-        // Logic to go to next week (simplified for now)
-        alert("Next week clicked!");
+        setCurrentWeek((prev) => {
+            const date = new Date(prev);
+            date.setDate(date.getDate() + 7);
+            return date.toISOString().split("T")[0];
+        });
     };
 
     const handleToday = () => {
-        // Logic to set to current week
-        alert("Aujourd’hui clicked!");
+        setCurrentWeek(new Date().toISOString().split("T")[0]);
     };
 
     const handleNewMeeting = () => {
         navigate("/calendar/new");
+    };
+
+    const handleEventDrop = (info: any) => {
+        const updatedEvent = {
+            id: info.event.id,
+            title: info.event.title,
+            start: info.event.start.toISOString(),
+            end: info.event.end
+                ? info.event.end.toISOString()
+                : info.event.start.toISOString(),
+        };
+        setEvents((prev) =>
+            prev.map((evt) => (evt.id === updatedEvent.id ? updatedEvent : evt))
+        );
+    };
+
+    const handleEventClick = (info: any) => {
+        alert(`Event: ${info.event.title}\nStart: ${info.event.start}`);
+    };
+
+    const getWeekNumber = (date: string) => {
+        const d = new Date(date);
+        const startOfYear = new Date(d.getFullYear(), 0, 1);
+        const diff = d.getTime() - startOfYear.getTime();
+        const oneDay = 1000 * 60 * 60 * 24;
+        const dayOfYear = Math.floor(diff / oneDay);
+        return Math.ceil((dayOfYear + startOfYear.getDay() + 1) / 7);
     };
 
     return (
@@ -95,50 +132,41 @@ const CalendarView: React.FC = () => {
                 >
                     <ChevronRight size={16} />
                 </button>
-                <span className="text-sm text-gray-600">Semaine 15</span>
+                <span className="text-sm text-gray-600">
+                    Semaine {getWeekNumber(currentWeek)}
+                </span>
                 <select className="border border-gray-300 rounded-md text-sm p-1">
                     <option>Semaine</option>
                     <option>Jour</option>
                     <option>Mois</option>
                 </select>
-                <span className="text-sm text-gray-600">avr. 2025</span>
+                <span className="text-sm text-gray-600">
+                    {new Date(currentWeek).toLocaleString("fr-FR", {
+                        month: "short",
+                        year: "numeric",
+                    })}
+                </span>
             </div>
 
-            {/* Calendar Grid */}
+            {/* FullCalendar Component */}
             <div className="flex-1 overflow-auto">
-                <div className="grid grid-cols-8 gap-px bg-gray-200">
-                    {/* Time Column */}
-                    <div className="col-span-1">
-                        <div className="h-12"></div>{" "}
-                        {/* Empty space for day headers */}
-                        {timeSlots.map((time) => (
-                            <div
-                                key={time}
-                                className="h-12 border-t border-gray-200 text-sm text-gray-600 p-2"
-                            >
-                                {time}
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Days of the Week */}
-                    {daysOfWeek.map((day) => (
-                        <div key={day.day} className="col-span-1">
-                            <div className="h-12 border-t border-gray-200 text-sm text-gray-600 p-2 text-center">
-                                <div>{day.day}</div>
-                                <div className="font-semibold">{day.date}</div>
-                            </div>
-                            {timeSlots.map((time) => (
-                                <div
-                                    key={`${day.day}-${time}`}
-                                    className="h-12 border-t border-gray-200 bg-white hover:bg-gray-50"
-                                >
-                                    {/* Add meeting events here */}
-                                </div>
-                            ))}
-                        </div>
-                    ))}
-                </div>
+                <FullCalendar
+                    plugins={[timeGridPlugin, interactionPlugin]}
+                    initialView="timeGridWeek"
+                    initialDate={currentWeek}
+                    events={events}
+                    editable={true}
+                    droppable={true}
+                    eventDrop={handleEventDrop}
+                    eventClick={handleEventClick}
+                    headerToolbar={false}
+                    slotMinTime="00:00:00"
+                    slotMaxTime="24:00:00"
+                    allDaySlot={false}
+                    height="auto"
+                    locale="fr"
+                    firstDay={1}
+                />
             </div>
 
             {/* Sidebar for Participants */}
