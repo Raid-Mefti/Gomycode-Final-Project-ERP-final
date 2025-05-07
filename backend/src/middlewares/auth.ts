@@ -1,10 +1,24 @@
 import jwt from "jsonwebtoken";
-import { User } from "../models/User.js";
+import { User } from "../models/User";
 import { NextFunction, Request, Response } from "express";
-import EmployeeModel, { EmployeeI } from "../models/Employee2.js";
+import Employee, { EmployeeI } from "../models/Employee";
+
+interface JWTPayload {
+  userId: string;
+  role: string;
+}
+
+// Extend Express Request type to include our user
+declare global {
+  namespace Express {
+    interface Request {
+      user?: EmployeeI;
+    }
+  }
+}
 
 export async function verifyCredentials(
-  req: Request & { user?: EmployeeI },
+  req: Request,
   res: Response,
   next: NextFunction
 ) {
@@ -12,8 +26,8 @@ export async function verifyCredentials(
     const bearerToken = req.headers["authorization"];
     if (!bearerToken) throw new Error("Bearer token not provided");
     const token = bearerToken.split(" ")[1];
-    const data = jwt.verify(token, process.env.JWT_SECRET) as { _id: string };
-    const user = await EmployeeModel.findById(data._id);
+    const data = jwt.verify(token, process.env.JWT_SECRET || "your-secret-key") as JWTPayload;
+    const user = await Employee.findById(data.userId);
     if (user) {
       req.user = user;
     }
@@ -24,24 +38,25 @@ export async function verifyCredentials(
 }
 
 export async function isLoggedIn(
-  req: Request & { employee?: EmployeeI },
+  req: Request,
   res: Response,
   next: NextFunction
 ) {
-  if (req.employee) {
+  if (req.user) {
     next();
   } else {
-    res.json({ error: "You are not logged in" });
+    res.status(401).json({ error: "You are not logged in" });
   }
 }
+
 export async function isAdmin(
-  req: Request & { employee?: EmployeeI },
+  req: Request,
   res: Response,
   next: NextFunction
 ) {
-  if (req.employee!.role === "admin") {
+  if (req.user?.role === "admin") {
     next();
   } else {
-    res.json({ error: "You are not an admin" });
+    res.status(403).json({ error: "You are not an admin" });
   }
 }

@@ -1,5 +1,10 @@
-import React, { createContext, useState, useEffect, ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
+import React, {
+    createContext,
+    useState,
+    useEffect,
+    ReactNode,
+    useContext,
+} from "react";
 
 interface AuthContextType {
     isLoggedIn: boolean;
@@ -15,10 +20,18 @@ const AuthContext = createContext<AuthContextType>({
     logout: () => {},
 });
 
+// Custom hook to use the auth context
+export const useAuth = () => {
+    const context = useContext(AuthContext);
+    if (!context) {
+        throw new Error("useAuth must be used within an AuthProvider");
+    }
+    return context;
+};
+
 const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
     const [userRole, setUserRole] = useState<string | null>(null);
-    const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -47,9 +60,9 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
             setIsLoggedIn(true);
             setUserRole(data.role);
 
-            if (data.role === "RH") navigate("/employees");
-            else if (data.role === "Marketing") navigate("/crm");
-            else if (data.role === "Finances") navigate("/costs");
+            // Instead of using navigate directly, we'll return the role
+            // The component using this can handle the navigation
+            return data.role;
         } catch (error) {
             console.error(error);
             throw new Error("Invalid credentials");

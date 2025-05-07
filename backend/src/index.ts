@@ -1,6 +1,6 @@
-import dbConnection from "config/db";
-import { server } from "./app.js";
-import logger from "./config/logger.js"; // Import your custom logger
+import dbConnection from "./config/db";
+import { server } from "./app";
+import logger from "./config/logger";
 
 const PORT = process.env.PORT || 3000; // Use the port from the environment, or default to 3000
 

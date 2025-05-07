@@ -1,18 +1,16 @@
 import mongoose from "mongoose";
-import logger from "./logger.js";
+import logger from "./logger";
+
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/erp_db';
 
 const dbConnection = mongoose
-  .connect(process.env.MONGODB_URI, {
+  .connect(MONGODB_URI, {
     dbName: process.env.MONGODB_DB_NAME,
-    auth: {
-      username: process.env.MONGODB_USERNAME,
-      password: process.env.MONGODB_PASSWORD,
-    },
   })
   .then(() => logger.info("Connected to MongoDB"))
   .catch((error) => {
-    logger.error(`MongoDB connection error: ${error.message}`);
-    throw error;
+    logger.error("MongoDB connection error:", error);
+    process.exit(1);
   });
 
 export default dbConnection;

@@ -1,7 +1,8 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import axios from "axios"; // Pour les appels API
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../AuthContext";
 
 // Schema de validation avec Yup
 const LoginSchema = Yup.object().shape({
@@ -12,14 +13,21 @@ const LoginSchema = Yup.object().shape({
 });
 
 const LoginPage: React.FC = () => {
-    const handleSubmit = async (values: any, { setSubmitting }:any) => {
+    const { login } = useAuth();
+    const navigate = useNavigate();
+
+    const handleSubmit = async (values: any, { setSubmitting }: any) => {
         try {
-            const response = await axios.post("/api/auth/login", values);
-            console.log("Login successful:", response.data);
-            alert("Connexion réussie (simulation)");
+            const role = await login(values.email, values.password);
+
+            // Handle navigation based on role
+            if (role === "RH") navigate("/employees");
+            else if (role === "Marketing") navigate("/crm");
+            else if (role === "Finances") navigate("/costs");
+            else navigate("/dashboard"); // Default route for other roles
         } catch (error) {
             console.error("Login failed:", error);
-            alert("Échec de la connexion (simulation)");
+            alert("Échec de la connexion");
         } finally {
             setSubmitting(false);
         }
@@ -47,7 +55,6 @@ const LoginPage: React.FC = () => {
 
             <div className="w-2/3 flex flex-col items-center justify-center p-12">
                 <div className="mb-8 text-center">
-                    
                     <p className="text-white text-3xl">
                         dok nchofo wesh ndiro hna lhdlidol!
                     </p>

@@ -1,5 +1,5 @@
 import http from "http";
-import express from "express";
+import express, { Request, Response, NextFunction, RequestHandler, ErrorRequestHandler } from "express";
 import { Server } from "socket.io";
 import "dotenv/config";
 import morgan from "morgan";
@@ -40,10 +40,10 @@ app.use(morgan("dev"));
 app.use("/api/v1", v1Router);
 
 // --- Login Route ---
-app.post("/api/v1/login", async (req:any, res:any) => {
-  const { email, password } = req.body;
-
+const loginHandler: RequestHandler = async (req, res, next) => {
   try {
+    const { email, password } = req.body;
+
     // --- Option 1: Use real database ---
     /*
     const user = await User.findOne({ email }).select("+password");
@@ -61,7 +61,8 @@ app.post("/api/v1/login", async (req:any, res:any) => {
 
     const user = users.find((u) => u.email === email);
     if (!user || !(await bcrypt.compare(password, user.password))) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      res.status(401).json({ message: "Invalid credentials" });
+      return;
     }
 
     const token = jwt.sign(
@@ -72,19 +73,23 @@ app.post("/api/v1/login", async (req:any, res:any) => {
 
     res.json({ token, role: user.role });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
+    next(err);
   }
-});
+};
+
+app.post("/api/v1/login", loginHandler);
 
 // --- Error Handler for CORS and others ---
-app.use((err, req, res, next) => {
+const errorHandler: ErrorRequestHandler = (err: Error, req: Request, res: Response, next: NextFunction): void => {
   if (err.message?.includes("CORS")) {
-    return res.status(403).json({ message: err.message });
+    res.status(403).json({ message: err.message });
+    return;
   }
   console.error(err);
   res.status(500).json({ message: "Internal server error" });
-});
+};
+
+app.use(errorHandler);
 
 // --- HTTP + Socket.io Setup ---
 export const server = http.createServer(app);
