@@ -446,7 +446,7 @@ const Costs: React.FC = () => {
                     </button>
                 </div>
                 <span className="text-sm text-gray-600">
-                    Aujourd'hui - Housseme kouachi - Création d’un nouvel
+                    Aujourd'hui - John Doe - Création d’un nouvel
                     enregistrement.
                 </span>
             </div>

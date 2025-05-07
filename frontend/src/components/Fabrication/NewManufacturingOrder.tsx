@@ -81,7 +81,7 @@ const NewManufacturingOrder: React.FC = () => {
                         </label>
                         <input
                             type="text"
-                            value="Houssem kouachi"
+                            value=" John Doe"
                             className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                             readOnly
                         />

@@ -1,5 +1,5 @@
 import dbConnection from "config/db";
-import { server } from "./app";
+import { server } from "./app.js";
 import logger from "./config/logger.js"; // Import your custom logger
 
 const PORT = process.env.PORT || 3000; // Use the port from the environment, or default to 3000
@@ -14,8 +14,8 @@ dbConnection
     });
   })
   .catch((err) => {
-    // Handle database connection errors gracefully.  The application should not start.
+    // Handle database connection errors gracefully. The application should not start.
     console.error("Failed to connect to the database:", err);
     logger.error("Failed to connect to the database:", err);
-    //  process.exit(1); //  Important: Exit if DB connection fails.  Uncomment if needed.
+    process.exit(1); // Exit if DB connection fails
   });

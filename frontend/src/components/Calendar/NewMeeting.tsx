@@ -10,7 +10,7 @@ const NewMeeting: React.FC = () => {
         heureDebut: "2025-04-14T00:00", // Adjusted format for datetime-local
         heureFin: "2025-04-17T00:00", // Adjusted format for datetime-local
         touteJournee: false,
-        organisateur: "Housseme kouachi",
+        organisateur: " John Doe",
         description: "Audit interne",
         lieu: "El Achour",
         urlVideo: "",
@@ -117,9 +117,7 @@ const NewMeeting: React.FC = () => {
                         />
                     </div>
                     <div className="flex items-center space-x-2">
-                        <span className="text-sm text-gray-600">
-                            Housseme kouachi
-                        </span>
+                        <span className="text-sm text-gray-600">John Doe</span>
                         <button className="text-purple-600 hover:underline">
                             EMAIL
                         </button>
@@ -239,7 +237,7 @@ const NewMeeting: React.FC = () => {
                         </label>
                         <div className="flex items-center space-x-2">
                             <span className="text-sm text-gray-600">
-                                Housseme kouachi
+                                John Doe
                             </span>
                         </div>
                     </div>
@@ -368,7 +366,7 @@ const NewMeeting: React.FC = () => {
                     </button>
                 </div>
                 <span className="text-sm text-gray-600">
-                    Aujourd'hui - Housseme kouachi - Création d’un nouvel
+                    Aujourd'hui - John Doe - Création d’un nouvel
                     enregistrement.
                 </span>
             </div>

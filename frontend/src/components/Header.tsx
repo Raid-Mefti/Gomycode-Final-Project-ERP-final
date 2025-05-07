@@ -23,7 +23,7 @@ const Header: React.FC = () => {
     return (
         <div className="bg-[#2c3e50] text-white p-3 flex justify-between items-center">
             <div className="flex items-center">
-                <span>👤 HOUZEM kouachi</span>
+                <span>👤 John Doe</span>
             </div>
             <div className="flex items-center space-x-4">
                 {/* Messages Dropdown */}

@@ -176,9 +176,7 @@ const CalendarView: React.FC = () => {
                 </h4>
                 <div className="flex items-center space-x-2 mb-2">
                     <input type="checkbox" className="mr-2" />
-                    <span className="text-sm text-gray-600">
-                        Housseme kouachi
-                    </span>
+                    <span className="text-sm text-gray-600">John Doe</span>
                 </div>
                 <div className="flex items-center space-x-2">
                     <input type="checkbox" className="mr-2" />

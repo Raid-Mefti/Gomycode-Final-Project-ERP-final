@@ -528,8 +528,8 @@ const NewPlanning: React.FC = () => {
                     </button>
                 </div>
                 <span className="text-sm text-gray-600">
-                    Aujourd'hui - Housseme kouachi - Fiche Exigence Product
-                    Commerciale Créée
+                    Aujourd'hui - John Doe - Fiche Exigence Product Commerciale
+                    Créée
                 </span>
             </div>
         </div>

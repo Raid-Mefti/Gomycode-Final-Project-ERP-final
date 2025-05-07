@@ -1,53 +1,92 @@
 import http from "http";
-import { Server } from "socket.io";
-import "dotenv/config"; // Load environment variables from .env file
 import express from "express";
-import logger from "./config/logger.js"; // Import your custom logger
-import dbConnection from "./config/db.js"; // Import your database connection function/promise
-import v1Router from "./routes/v1.js"; // Import your version 1 API routes
-import morgan from "morgan"; // HTTP request logger middleware
-import cors from "cors"; // Middleware for handling Cross-Origin Resource Sharing
+import { Server } from "socket.io";
+import "dotenv/config";
+import morgan from "morgan";
+import cors from "cors";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+
+import logger from "./config/logger";
+import dbConnection from "./config/db";
+import v1Router from "./routes/V1";
+
+// import User from "./models/User.js"; // Uncomment when using real DB
 
 const app = express();
 
-// Set the application to trust the reverse proxy (if you're behind one)
 app.set("trust proxy", true);
 
-// Configure CORS
+// --- CORS ---
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (e.g., mobile apps, curl)
-      if (!origin) {
-        return callback(null, true);
-      }
+      if (!origin) return callback(null, true); // Allow curl or Postman
 
-      // Allow requests from your frontend (replace with your actual origin)
-      const allowedOrigins = [process.env.CLIENT_URL];
+      const allowedOrigins = [process.env.CLIENT_URL || "http://localhost:3000"];
+      if (allowedOrigins.includes(origin)) return callback(null, true);
 
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-
-      // Reject requests from other origins
-      const msg = `The CORS policy for this site does not allow access from the specified Origin.  Origin: ${origin}`;
-      return callback(new Error(msg), false);
+      return callback(new Error(`CORS error: Origin ${origin} not allowed`), false);
     },
-    credentials: true, // Allow sending cookies from the frontend
+    credentials: true,
   })
 );
 
-// Middleware for parsing JSON request bodies.  Essential for POST/PUT requests.
+// --- Middleware ---
 app.use(express.json());
-//  app.use(express.urlencoded({ extended: true })); //  No longer needed, kept as comment.
-
-// Use Morgan for logging HTTP requests.  'dev' format is good for development.
 app.use(morgan("dev"));
 
-// Mount the version 1 API routes under the /api/v1 path.
+// --- Routes ---
 app.use("/api/v1", v1Router);
 
-// Create an HTTP server using the express app
+// --- Login Route ---
+app.post("/api/v1/login", async (req:any, res:any) => {
+  const { email, password } = req.body;
+
+  try {
+    // --- Option 1: Use real database ---
+    /*
+    const user = await User.findOne({ email }).select("+password");
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+    */
+
+    // --- Option 2: Mock user data ---
+    const users = [
+      { id: 1, email: "rh@example.com", password: "$2b$10$123456789012345678901uW8nEV8bRzD9GyPOnZDpTQxdOjGjG0yW", role: "RH" }, // password123
+      { id: 2, email: "marketing@example.com", password: "$2b$10$123456789012345678901uW8nEV8bRzD9GyPOnZDpTQxdOjGjG0yW", role: "Marketing" },
+      { id: 3, email: "finances@example.com", password: "$2b$10$123456789012345678901uW8nEV8bRzD9GyPOnZDpTQxdOjGjG0yW", role: "Finances" },
+    ];
+
+    const user = users.find((u) => u.email === email);
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    const token = jwt.sign(
+      { id: user.id, role: user.role },
+      process.env.JWT_SECRET || "your-secret-key",
+      { expiresIn: "1h" }
+    );
+
+    res.json({ token, role: user.role });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// --- Error Handler for CORS and others ---
+app.use((err, req, res, next) => {
+  if (err.message?.includes("CORS")) {
+    return res.status(403).json({ message: err.message });
+  }
+  console.error(err);
+  res.status(500).json({ message: "Internal server error" });
+});
+
+// --- HTTP + Socket.io Setup ---
 export const server = http.createServer(app);
 
 export const io = new Server(server, {
@@ -56,6 +95,6 @@ export const io = new Server(server, {
     credentials: true,
   },
 });
-// Establish the database connection *before* starting the server.
 
+// Export the express app
 export default app;

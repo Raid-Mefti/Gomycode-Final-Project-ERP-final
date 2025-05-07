@@ -84,7 +84,7 @@ const NewFabricationOrder: React.FC = () => {
                         </label>
                         <input
                             type="text"
-                            value="Houssem kouachi"
+                            value=" John Doe"
                             className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                             readOnly
                         />
@@ -216,7 +216,7 @@ const NewFabricationOrder: React.FC = () => {
                     </div>
                     <div>
                         <p className="text-sm text-gray-800">
-                            <span className="font-medium">Houssem kouachi</span>{" "}
+                            <span className="font-medium"> John Doe</span>{" "}
                             Création d'un nouvel enregistrement
                         </p>
                     </div>
