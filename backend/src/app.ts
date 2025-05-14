@@ -9,7 +9,7 @@ import bcrypt from "bcrypt";
 
 import logger from "./config/logger";
 import dbConnection from "./config/db";
-import v1Router from "./routes/V1";
+import V1Router from "./routes/V1";
 
 // import User from "./models/User.js"; // Uncomment when using real DB
 
@@ -37,7 +37,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 // --- Routes ---
-app.use("/api/v1", v1Router);
+app.use("/api/v1", V1Router);
 
 // --- Login Route ---
 const loginHandler: RequestHandler = async (req, res, next) => {

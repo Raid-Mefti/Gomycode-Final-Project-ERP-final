@@ -22,7 +22,7 @@ import "dotenv/config";
 import express from "express";
 import logger from "../config/logger.js";
 import dbConnection from "../config/db.js";
-import v1Router from "./v1";
+import v1Router from "./V1.js";
 import morgan from "morgan";
 import cors from "cors";
 
